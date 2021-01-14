@@ -1,13 +1,14 @@
 #! /usr/bin/env python3
 
 import os
+import sys
 import json
 import subprocess
 
 def ConvertTime(time_str):
     try:
         parts = time_str.split('m')
-        minutes, seconds = int(parts[0]), float(parts[1].replace('s', '').replace('\'',''))
+        minutes, seconds = int(parts[0]), float(parts[1].replace('s', ''))
         return minutes * 60 + seconds
     except:
         return time_str
@@ -15,15 +16,17 @@ def ConvertTime(time_str):
 
 def FrCheckWrapper(file_path):
     cmd = "time FrCheck -d 1 -i "+file_path
-    print(cmd)
+    print("\n\n"+cmd+"\n")
+    cmd = "cat ./example_output.out"
     process = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
     output, error = process.communicate()
-    output_str = str(output)
+    output_str = str(output.decode("utf-8"))
+    print(output_str)
     checksum_status = "No read error. File Checksum OK" in output_str and "No read error. Structure Checksums OK" in output_str
-    output_str_lines = output_str.split("\\n")
-    time_real = ConvertTime(output_str_lines[-3].split("\\t")[-1])
-    time_user = ConvertTime(output_str_lines[-2].split("\\t")[-1])
-    time_sys = ConvertTime(output_str_lines[-1].split("\\t")[-1])
+    output_str_lines = output_str.split("\n")
+    time_real = ConvertTime(output_str_lines[-3].split("\t")[-1])
+    time_user = ConvertTime(output_str_lines[-2].split("\t")[-1])
+    time_sys = ConvertTime(output_str_lines[-1].split("\t")[-1])
     return {"checksum_status": checksum_status, "timer": {"real": time_real, "user": time_user, "sys": time_sys}}
 
 
