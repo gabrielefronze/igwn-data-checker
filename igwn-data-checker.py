@@ -17,7 +17,6 @@ def ConvertTime(time_str):
 def FrCheckWrapper(file_path):
     cmd = "time FrCheck -d 1 -i "+file_path
     print("\n\n"+cmd+"\n")
-    cmd = "cat ./example_output.out"
     process = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
     output, error = process.communicate()
     output_str = str(output.decode("utf-8"))
