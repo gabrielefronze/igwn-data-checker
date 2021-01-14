@@ -1,0 +1,8 @@
+{
+    "settings": {
+        "runs_per_file": 2
+    },
+    "paths_to_test" : [
+        "./test"
+    ]
+}

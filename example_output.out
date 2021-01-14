@@ -1,0 +1,36 @@
+ Checking file /cvmfs/ligo.osgstorage.org/frames/O3/V1Online/V-V1Online-12667/V-V1Online-1266702000-2000.gwf
+ Compression will NOT be checked
+
+  Sequential file reading. Please wait....
+        1 frames read
+        2 frames read
+        4 frames read
+        8 frames read
+       16 frames read
+       32 frames read
+       64 frames read
+      128 frames read
+      256 frames read
+      512 frames read
+     1024 frames read
+   2000 frame(s) in file. No read error. File Checksum OK (ed62f3d9)
+
+  Reading using the TOC. Please wait....
+   Requested time range:         0 - 2147483647
+        File time range: 1266702000 - 1266704000
+        1 frames read
+        2 frames read
+        4 frames read
+        8 frames read
+       16 frames read
+       32 frames read
+       64 frames read
+      128 frames read
+      256 frames read
+      512 frames read
+     1024 frames read
+   2000 frame(s) in file. No read error. Structure Checksums OK
+
+real	0m2.364s
+user	0m1.881s
+sys	0m0.408s
