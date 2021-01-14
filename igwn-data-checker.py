@@ -5,9 +5,12 @@ import json
 import subprocess
 
 def ConvertTime(time_str):
-    parts = time_str.split('m')
-    minutes, seconds = int(parts[0]), float(parts[1].replace('s', '').replace('\'',''))
-    return minutes * 60 + seconds
+    try:
+        parts = time_str.split('m')
+        minutes, seconds = int(parts[0]), float(parts[1].replace('s', '').replace('\'',''))
+        return minutes * 60 + seconds
+    except:
+        return time_str
 
 
 def FrCheckWrapper(file_path):
