@@ -15,13 +15,14 @@ def ConvertTime(time_str):
 
 
 def FrCheckWrapper(file_path):
-    cmd = "time FrCheck -d 1 -i "+file_path+" && sleep 1"
+    cmd = "time FrCheck -d 1 -i "+file_path
     print("\n\n"+cmd+"\n")
     process = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     output, error = process.communicate()
     output_str = str(output.decode("utf-8"))
+    error_str = str(error.decode("utf-8"))
     print(output_str)
-    print(error)
+    print(error_str)
     checksum_status = "No read error. File Checksum OK" in output_str and "No read error. Structure Checksums OK" in output_str
     output_str_lines = output_str.split("\n")
     time_real = ConvertTime(output_str_lines[-3].split("\t")[-1])
