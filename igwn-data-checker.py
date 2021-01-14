@@ -24,10 +24,17 @@ def FrCheckWrapper(file_path):
     print(output_str)
     print(error_str)
     checksum_status = "No read error. File Checksum OK" in output_str and "No read error. Structure Checksums OK" in output_str
-    output_str_lines = output_str.split("\n")
-    time_real = ConvertTime(output_str_lines[-3].split("\t")[-1])
-    time_user = ConvertTime(output_str_lines[-2].split("\t")[-1])
-    time_sys = ConvertTime(output_str_lines[-1].split("\t")[-1])
+    
+    if "real" in output_str and "sys" in output_str:
+        output_str_lines = output_str.split("\n")
+        time_real = ConvertTime(output_str_lines[-3].split("\t")[-1])
+        time_user = ConvertTime(output_str_lines[-2].split("\t")[-1])
+        time_sys = ConvertTime(output_str_lines[-1].split("\t")[-1])
+    elif "elapsed" in error_str and "system" in error_str:
+        time_user = error_str.split("user ")[0]
+        time_sys = error_str.split("user ")[1].split("system ")[0]
+        time_real = error_str.split("user ")[1].split("system ")[1].split("elapsed ")[0]
+    
     return {"checksum_status": checksum_status, "timer": {"real": time_real, "user": time_user, "sys": time_sys}}
 
 
