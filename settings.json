@@ -1,6 +1,7 @@
 {
     "settings": {
-        "runs_per_file": 2
+        "runs_per_file": 2,
+        "verbose": false
     },
     "paths_to_test" : [
         "./test"

@@ -14,15 +14,16 @@ def ConvertTime(time_str):
         return time_str
 
 
-def FrCheckWrapper(file_path):
+def FrCheckWrapper(file_path, verbose):
     cmd = "time FrCheck -d 1 -i "+file_path
     print("\n\n"+cmd+"\n")
     process = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     output, error = process.communicate()
     output_str = str(output.decode("utf-8"))
     error_str = str(error.decode("utf-8"))
-    print(output_str)
-    print(error_str)
+    if verbose:
+        print(output_str)
+        print(error_str)
     checksum_status = "No read error. File Checksum OK" in output_str and "No read error. Structure Checksums OK" in output_str
     
     if "real" in output_str and "sys" in output_str:
@@ -38,17 +39,17 @@ def FrCheckWrapper(file_path):
     return {"checksum_status": checksum_status, "timer": {"real": time_real, "user": time_user, "sys": time_sys}}
 
 
-def Handler(path):
+def Handler(path, verbose):
     results = {}
     if os.path.isdir(path):
         for f_path in os.listdir(path):
             abs_path = os.path.join(path, f_path)
             if f_path in results:
-                results[abs_path].append(FrCheckWrapper(os.path.abspath(abs_path)))
+                results[abs_path].append(FrCheckWrapper(os.path.abspath(abs_path), verbose))
             else:
-                results[abs_path] = [FrCheckWrapper(os.path.abspath(abs_path))]
+                results[abs_path] = [FrCheckWrapper(os.path.abspath(abs_path), verbose)]
     elif os.path.isfile(path):
-        results[path] = [FrCheckWrapper(path)]
+        results[path] = [FrCheckWrapper(path, verbose)]
     else:
         raise Exception("Invalid path provided {}".format(path))
     return results
@@ -60,7 +61,7 @@ def BulkHandler(settings):
 
     for path in paths:
         for i in range(0, settings["settings"]["runs_per_file"]):
-            partial_results = Handler(os.path.abspath(path))
+            partial_results = Handler(os.path.abspath(path), settings["settings"]["verbose"])
             for p,measures in partial_results.items():
                 if p in results:
                     results[p] += measures
