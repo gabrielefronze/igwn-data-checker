@@ -73,9 +73,9 @@ def Handler(path, verbose):
                 if abs_path in results:
                     results[abs_path] = {}
                     results[abs_path]["size"] = os.path.getsize(abs_path)
-                    results[abs_path]["results"] = [res]
-                else:
                     results[abs_path]["results"] += [res]
+                else:
+                    results[abs_path]["results"] = [res]
         else:
             print("Path {} not valid. Not a .gwf file".format(abs_path))
     else:
