@@ -73,7 +73,7 @@ def BulkHandler(settings):
             partial_results = Handler(os.path.abspath(path), settings["settings"]["verbose"])
             for p,measures in partial_results.items():
                 if p in results:
-                    results[p] += measures
+                    results[p]["results"] += measures["results"]
                 else:
                     results[p] = measures
 
