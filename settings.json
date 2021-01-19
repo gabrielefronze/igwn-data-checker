@@ -1,9 +1,9 @@
 {
     "settings": {
-        "runs_per_file": 2,
+        "runs_per_file": 10,
         "verbose": false
     },
     "paths_to_test" : [
-        "./test"
+        "/cvmfs/ligo.osgstorage.org/frames/O3/V1Online/V-V1Online-12667"
     ]
 }
