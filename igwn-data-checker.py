@@ -41,7 +41,7 @@ def FrCheckWrapper(file_path, verbose):
         time_sys = float(error_str.split("user ")[1].split("system ")[0])
         time_real = error_str.split("user ")[1].split("system ")[1].split("elapsed ")[0]
     
-    return {"checksum_status": checksum_status, "timer": {"real": time_real, "user": time_user, "sys": time_sys}}
+    return {"checksum_status": checksum_status, "timer": {"real": time_real, "user": time_user, "sys": time_sys}, "status": True}
 
 
 def Handler(path, verbose):
@@ -69,6 +69,13 @@ def Handler(path, verbose):
                     results[abs_path]["results"] += [res]
             except:
                 print("Error processing path {}. Skipping.".format(abs_path))
+                res = {"checksum_status": False, "timer": {"real": 0, "user": 0, "sys": 0}, "status": False}
+                if abs_path in results:
+                    results[abs_path] = {}
+                    results[abs_path]["size"] = os.path.getsize(abs_path)
+                    results[abs_path]["results"] = [res]
+                else:
+                    results[abs_path]["results"] += [res]
         else:
             print("Path {} not valid. Not a .gwf file".format(abs_path))
     else:
