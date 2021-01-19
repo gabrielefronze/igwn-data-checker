@@ -46,21 +46,20 @@ def FrCheckWrapper(file_path, verbose):
 
 def Handler(path, verbose):
     results = {}
-    if os.path.isdir(path):
-        for f_path in os.listdir(path):
-            abs_path = os.path.join(path, f_path)
-            if f_path in results:
-                results[abs_path]["results"].append(FrCheckWrapper(os.path.abspath(abs_path), verbose))
-            else:
-                results[abs_path] = {}
-                results[abs_path]["size"] = os.path.getsize(abs_path)
-                results[abs_path]["results"] = [FrCheckWrapper(os.path.abspath(abs_path), verbose)]
-    elif os.path.isfile(path):
-        results[path] = {}
-        results[path]["size"] = os.path.getsize(path)
-        results[path]["results"] = [FrCheckWrapper(path, verbose)]
+    abs_path = os.path.abspath(path)
+    print(abs_path)
+    if os.path.isdir(abs_path):
+        for path in os.listdir(abs_path):
+            Handler(os.path.join(abs_path, path), verbose)
+    elif os.path.isfile(abs_path):
+        if abs_path.endswith(".gwf"):
+            results[abs_path] = {}
+            results[abs_path]["size"] = os.path.getsize(abs_path)
+            results[abs_path]["results"] = [FrCheckWrapper(abs_path, verbose)]
+        else:
+            print("Path {} not valid. Not a .gwf file".format(abs_path))
     else:
-        raise Exception("Invalid path provided {}".format(path))
+        raise Exception("Invalid path provided {}".format(abs_path))
     return results
 
 
