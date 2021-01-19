@@ -64,9 +64,9 @@ def Handler(path, verbose):
                 if abs_path in results:
                     results[abs_path] = {}
                     results[abs_path]["size"] = os.path.getsize(abs_path)
-                    results[abs_path]["results"] = [res]
-                else:
                     results[abs_path]["results"] += [res]
+                else:
+                    results[abs_path]["results"] = [res]
             except:
                 print("Error processing path {}. Skipping.".format(abs_path))
                 res = {"checksum_status": False, "timer": {"real": 0, "user": 0, "sys": 0}, "status": False}
