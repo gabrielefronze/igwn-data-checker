@@ -47,10 +47,16 @@ def FrCheckWrapper(file_path, verbose):
 def Handler(path, verbose):
     results = {}
     abs_path = os.path.abspath(path)
-    print(abs_path)
     if os.path.isdir(abs_path):
         for path in os.listdir(abs_path):
-            Handler(os.path.join(abs_path, path), verbose)
+            r = Handler(os.path.join(abs_path, path), verbose)
+            for p, data in r.items():
+                if p in results:
+                    results[p]["results"] += data[results]
+                else:
+                    results[p] = {}
+                    results[p]["size"] = data["size"]
+                    results[p]["results"] = data["results"]
     elif os.path.isfile(abs_path):
         if abs_path.endswith(".gwf"):
             results[abs_path] = {}
