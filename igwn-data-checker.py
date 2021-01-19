@@ -56,8 +56,8 @@ def Handler(path, verbose):
                 results[abs_path]["size"] = os.path.getsize(abs_path)
                 results[abs_path]["results"] = [FrCheckWrapper(os.path.abspath(abs_path), verbose)]
     elif os.path.isfile(path):
-        results[abs_path] = {}
-        results[abs_path]["size"] = os.path.getsize(path)
+        results[path] = {}
+        results[path]["size"] = os.path.getsize(path)
         results[path]["results"] = [FrCheckWrapper(path, verbose)]
     else:
         raise Exception("Invalid path provided {}".format(path))
