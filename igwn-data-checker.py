@@ -15,7 +15,7 @@ def ConvertTime(time_str):
 
 
 def FrCheckWrapper(file_path, verbose):
-    cmd = "time FrCheck -d 1 -i "+file_path
+    cmd = "time /cvmfs/virgo.ego-gw.it/software/VCS-12.1/python/anaconda2/bin/FrCheck -d 1 -i "+file_path
 
     if verbose:
         print("\n\n"+cmd+"\n")
@@ -52,16 +52,23 @@ def Handler(path, verbose):
             r = Handler(os.path.join(abs_path, path), verbose)
             for p, data in r.items():
                 if p in results:
-                    results[p]["results"] += data[results]
+                    results[p]["results"] += data["results"]
                 else:
                     results[p] = {}
                     results[p]["size"] = data["size"]
                     results[p]["results"] = data["results"]
     elif os.path.isfile(abs_path):
         if abs_path.endswith(".gwf"):
-            results[abs_path] = {}
-            results[abs_path]["size"] = os.path.getsize(abs_path)
-            results[abs_path]["results"] = [FrCheckWrapper(abs_path, verbose)]
+            try:
+                res = FrCheckWrapper(abs_path, verbose)
+                if abs_path in results:
+                    results[abs_path] = {}
+                    results[abs_path]["size"] = os.path.getsize(abs_path)
+                    results[abs_path]["results"] = [res]
+                else:
+                    results[abs_path]["results"] += [res]
+            except:
+                print("Error processing path {}. Skipping.".format(abs_path))
         else:
             print("Path {} not valid. Not a .gwf file".format(abs_path))
     else:
