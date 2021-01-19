@@ -50,9 +50,11 @@ def Handler(path, verbose):
         for f_path in os.listdir(path):
             abs_path = os.path.join(path, f_path)
             if f_path in results:
-                results[abs_path].append(FrCheckWrapper(os.path.abspath(abs_path), verbose))
+                results[abs_path]["results"].append(FrCheckWrapper(os.path.abspath(abs_path), verbose))
             else:
-                results[abs_path] = [FrCheckWrapper(os.path.abspath(abs_path), verbose)]
+                results[abs_path] = {}
+                results[abs_path]["size"] = os.path.getsize(abs_path)
+                results[abs_path]["results"] = [FrCheckWrapper(os.path.abspath(abs_path), verbose)]
     elif os.path.isfile(path):
         results[path] = [FrCheckWrapper(path, verbose)]
     else:
