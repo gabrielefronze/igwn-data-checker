@@ -4,16 +4,17 @@ transfer_input_files = ./settings.json
 executable = ./igwn-data-checker.py
 transfer_output_files = output.json
 
-log = std.log
-output = std.out
-error = std.err
+log = test_CNAF/std.log
+output = test_CNAF/std.out
+error = test_CNAF/std.err
 
 should_transfer_files = YES
 when_to_transfer_output = ON_EXIT
 
 use_x509userproxy = true
++DESIRED_Sites = "CNAF"
 
-accounting_group = something.somethingelse.somethingmore
-accounting_group_user = albert.einstein
+accounting_group = ligo.prod.o3.burst.snews.raven
+accounting_group_user = gabriele.fronze
 
 queue 1
