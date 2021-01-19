@@ -4,14 +4,15 @@ transfer_input_files = ./settings.json
 executable = ./igwn-data-checker.py
 transfer_output_files = output.json
 
-log = test_PIC/std.log
-output = test_PIC/std.out
-error = test_PIC/std.err
+log = std.log
+output = std.out
+error = std.err
 
 should_transfer_files = YES
 when_to_transfer_output = ON_EXIT
 
 use_x509userproxy = true
+requirements = (HAS_LIGO_FRAMES=?=True)
 +DESIRED_Sites = "PIC"
 
 accounting_group = ligo.prod.o3.burst.snews.raven
