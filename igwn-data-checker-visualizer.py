@@ -2,6 +2,7 @@
 
 import os
 import json
+import argparse
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -58,6 +59,7 @@ def main(json_path="output-PIC.json"):
         real_time_results.append((avg_real_time/counter))
 
     fig, axes = plt.subplots(nrows=5, ncols=2)
+    fig.suptitle("Input file: "+json_path, fontsize=30)
     ax = axes.flatten()
 
     n_checksums = len(checksum_results)
@@ -66,6 +68,7 @@ def main(json_path="output-PIC.json"):
     n_tests = int(n_checksums/n_entries)
 
     ax[0].hist(checksum_results, 2, histtype='bar', weights=[1/n_checksums*100] * n_checksums, color='navy')
+    ax[0].set_facecolor("whitesmoke")
     plt.sca(ax[0])
     plt.xticks([.75, 1.25], ["wrong", "correct"])
     ax[0].set_title("Checksum verification distribution", position=(0.5, 0.6))
@@ -74,6 +77,7 @@ def main(json_path="output-PIC.json"):
     plt.legend(handles=[leg_n_entries])
 
     ax[1].hist(statuses, 2, histtype='bar', weights=[1/n_statuses*100] * n_statuses, color='blue')
+    ax[1].set_facecolor("whitesmoke")
     plt.sca(ax[1])
     plt.xticks([.75, 1.25], ["failed", "valid"])
     ax[1].set_title("Runtime failures distribution", position=(0.5, 0.6))
@@ -82,6 +86,7 @@ def main(json_path="output-PIC.json"):
     plt.legend(handles=[leg_n_entries])
 
     ax[2].hist(user_time_results, int(n_entries/2), histtype='bar', color='darkgreen')
+    ax[2].set_facecolor("whitesmoke")
     plt.sca(ax[2])
     ax[2].set_title("File access time (user)", position=(0.5, 0.6))
     ax[2].set_xlabel("seconds [s]")
@@ -90,6 +95,7 @@ def main(json_path="output-PIC.json"):
     plt.legend(handles=[leg_n_entries])
 
     ax[3].hist(first_user_time_results, int(n_entries/2), histtype='bar', color='lime')
+    ax[3].set_facecolor("whitesmoke")
     plt.sca(ax[3])
     ax[3].set_title("First file access time (user)", position=(0.5, 0.6))
     ax[3].set_xlabel("seconds [s]")
@@ -97,7 +103,12 @@ def main(json_path="output-PIC.json"):
     leg_n_entries = mpatches.Patch(color='lime', label="{} files tested".format(n_entries, n_tests))
     plt.legend(handles=[leg_n_entries])
 
+    user_time_xlim = [min(ax[2].get_xlim()[0], ax[3].get_xlim()[0]), max(ax[2].get_xlim()[1], ax[3].get_xlim()[1])]
+    ax[2].set_xlim(user_time_xlim)
+    ax[3].set_xlim(user_time_xlim)
+
     ax[4].hist(sys_time_results, int(n_entries/2), histtype='bar', color='darkorange')
+    ax[4].set_facecolor("whitesmoke")
     plt.sca(ax[4])
     ax[4].set_title("File access time (sys)", position=(0.5, 0.6))
     ax[4].set_xlabel("seconds [s]")
@@ -106,14 +117,20 @@ def main(json_path="output-PIC.json"):
     plt.legend(handles=[leg_n_entries])
 
     ax[5].hist(first_sys_time_results, int(n_entries/2), histtype='bar', color='gold')
+    ax[5].set_facecolor("whitesmoke")
     plt.sca(ax[5])
     ax[5].set_title("First file access time (sys)", position=(0.5, 0.6))
     ax[5].set_xlabel("seconds [s]")
     ax[5].set_ylabel("counts")
     leg_n_entries = mpatches.Patch(color='gold', label="{} files tested".format(n_entries, n_tests))
     plt.legend(handles=[leg_n_entries])
+
+    sys_time_xlim = [min(ax[4].get_xlim()[0], ax[5].get_xlim()[0]), max(ax[4].get_xlim()[1], ax[5].get_xlim()[1])]
+    ax[4].set_xlim(sys_time_xlim)
+    ax[5].set_xlim(sys_time_xlim)
     
     ax[6].hist(real_time_results, int(n_entries/2), histtype='bar', color='maroon')
+    ax[6].set_facecolor("whitesmoke")
     plt.sca(ax[6])
     ax[6].set_title("File access time (real)", position=(0.5, 0.6))
     ax[6].set_xlabel("seconds [s]")
@@ -122,6 +139,7 @@ def main(json_path="output-PIC.json"):
     plt.legend(handles=[leg_n_entries])
 
     ax[7].hist(first_real_time_results, int(n_entries/2), histtype='bar', color='orangered')
+    ax[7].set_facecolor("whitesmoke")
     plt.sca(ax[7])
     ax[7].set_title("First file access time (real)", position=(0.5, 0.6))
     ax[7].set_xlabel("seconds [s]")
@@ -129,7 +147,12 @@ def main(json_path="output-PIC.json"):
     leg_n_entries = mpatches.Patch(color='orangered', label="{} files tested".format(n_entries, n_tests))
     plt.legend(handles=[leg_n_entries])
 
+    real_time_xlim = [min(ax[6].get_xlim()[0], ax[7].get_xlim()[0]), max(ax[6].get_xlim()[1], ax[7].get_xlim()[1])]
+    ax[6].set_xlim(real_time_xlim)
+    ax[7].set_xlim(real_time_xlim)
+
     ax[8].hist(file_sizes, int(n_entries/2), histtype='bar', color='deepskyblue')
+    ax[8].set_facecolor("whitesmoke")
     plt.sca(ax[8])
     ax[8].set_title("File sizes distribution", position=(0.5, 0.6))
     ax[8].set_xlabel("MB")
@@ -138,6 +161,7 @@ def main(json_path="output-PIC.json"):
     plt.legend(handles=[leg_n_entries])
 
     ax[9].hist(sys_MBps_results, int(n_entries/2), histtype='bar', color='purple')
+    ax[9].set_facecolor("whitesmoke")
     plt.sca(ax[9])
     ax[9].set_title("File transfer speed", position=(0.5, 0.6))
     ax[9].set_xlabel("Bandwidth [MB/s]")
@@ -147,9 +171,12 @@ def main(json_path="output-PIC.json"):
     
     plt.rcParams.update({'figure.autolayout': True})
     fig.subplots_adjust(hspace=0.4)
-    plt.subplots_adjust(left=0.05, right=0.95, top=0.95, bottom=0.05)
+    plt.subplots_adjust(left=0.05, right=0.95, top=0.90, bottom=0.05)
     plt.show()
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description='Visualize IGWN Data Checker output files')
+    parser.add_argument("json_path", type=str, help='Path of input JSON file.')
+    args = parser.parse_args()
+    main(json_path=args.json_path)
