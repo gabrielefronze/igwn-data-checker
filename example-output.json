@@ -1,0 +1,23 @@
+{
+    "/cvmfs/ligo.osgstorage.org/frames/O3/V1Online/V-V1Online-12667/V-V1Online-1266700000-2000.gwf": {
+        "size": 251646192,
+        "results": [
+            {
+                "checksum_status": true,
+                "timer": {
+                "real": "0:02.32",
+                "user": 1.88,
+                "sys": 0.43
+                }
+            },
+            {
+                "checksum_status": true,
+                "timer": {
+                "real": "0:02.26",
+                "user": 1.85,
+                "sys": 0.39
+                }
+            }
+        ]
+    }
+}
