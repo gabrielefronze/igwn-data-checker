@@ -59,7 +59,7 @@ def main(json_path="output-PIC.json"):
         real_time_results.append((avg_real_time/counter))
 
     fig, axes = plt.subplots(nrows=5, ncols=2)
-    fig.suptitle("Input file: "+json_path, fontsize=30)
+    fig.suptitle("Input file: "+os.path.basename(json_path), fontsize=30)
     ax = axes.flatten()
 
     n_checksums = len(checksum_results)
