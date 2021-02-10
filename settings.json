@@ -4,6 +4,8 @@
         "verbose": false
     },
     "paths_to_test" : [
-        "/cvmfs/ligo.osgstorage.org/frames/O3/V1Online/V-V1Online-12667"
+        "/cvmfs/ligo.osgstorage.org/frames/O3/V1Online/V-V1Online-12670",
+        "/cvmfs/ligo.osgstorage.org/frames/O3/V1Online/V-V1Online-12671",
+        "/cvmfs/ligo.osgstorage.org/frames/O3/V1Online/V-V1Online-12672"
     ]
 }
