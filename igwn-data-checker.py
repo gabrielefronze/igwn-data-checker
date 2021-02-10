@@ -15,6 +15,14 @@ def ConvertTime(time_str):
 
 
 def FrCheckWrapper(file_path, verbose):
+    if not os.path.isfile("/cvmfs/virgo.ego-gw.it/software/VCS-12.1/python/anaconda2/bin/FrCheck"):
+        print("Executable /cvmfs/virgo.ego-gw.it/software/VCS-12.1/python/anaconda2/bin/FrCheck not found. Aborting.".format(file_path))
+        return {"checksum_status": False, "timer": {"real": 0, "user": 0, "sys": 0}, "status": False}
+
+    if not os.path.isfile(file_path):
+        print("File {} not found. Aborting.".format(file_path))
+        return {"checksum_status": False, "timer": {"real": 0, "user": 0, "sys": 0}, "status": False}
+
     cmd = "time /cvmfs/virgo.ego-gw.it/software/VCS-12.1/python/anaconda2/bin/FrCheck -d 1 -i "+file_path
 
     if verbose:
