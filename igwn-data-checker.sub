@@ -13,7 +13,7 @@ when_to_transfer_output = ON_EXIT
 
 use_x509userproxy = true
 requirements = (HAS_LIGO_FRAMES=?=True)
-+DESIRED_Sites = "PIC"
++DESIRED_Sites = "NIKHEF"
 
 accounting_group = ligo.prod.o3.burst.snews.raven
 accounting_group_user = gabriele.fronze
