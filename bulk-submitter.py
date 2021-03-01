@@ -2,7 +2,7 @@
 
 import os
 import sys
-from datetime import date, now
+from datetime import date, datetime
 import shutil
 import subprocess
 import argparse
@@ -65,7 +65,7 @@ def main(frcheck_path = None, settings_file_path = None):
 
         today_path = os.path.join(cc_path, str(date.today()))
         mkdir_safe(today_path)
-        output_path = os.path.join(today_path, now.strftime("%H:%M:%S"))
+        output_path = os.path.join(today_path, datetime.now.strftime("%H:%M:%S"))
         mkdir_safe(output_path)
         print("Output will be found at: {}".format(output_path))
 
