@@ -8,7 +8,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 
-def main(json_path="output-PIC.json"):
+def main(json_path="output-PIC.json", normalize=False):
     paths = {}
     valid_counter = 0
     statuses = []
@@ -27,6 +27,7 @@ def main(json_path="output-PIC.json"):
         avg_sys_time = 0
         avg_real_time = 0
         size = data["size"]
+        normalization = size/2**20 if normalize else 1
         file_sizes.append(size/2**20)
         results = data["results"]
         print(path)
@@ -43,9 +44,9 @@ def main(json_path="output-PIC.json"):
                 real_time = r["timer"]["real"].split(":")
 
                 if i == 0:
-                    first_user_time_results.append(r["timer"]["user"])
-                    first_sys_time_results.append(r["timer"]["sys"])
-                    first_real_time_results.append(float(real_time[0])*60+float(real_time[1]))
+                    first_user_time_results.append(r["timer"]["user"]/normalization)
+                    first_sys_time_results.append(r["timer"]["sys"]/normalization)
+                    first_real_time_results.append((float(real_time[0])*60+float(real_time[1]))/normalization)
                 else:
                     counter += 1
                     avg_user_time += r["timer"]["user"] if r["timer"]["user"]>0 else 0.01
@@ -53,10 +54,10 @@ def main(json_path="output-PIC.json"):
                     avg_real_time += float(real_time[0])*60+float(real_time[1])
 
 
-        user_time_results.append((avg_user_time/counter))
-        sys_time_results.append((avg_sys_time/counter))
+        user_time_results.append((avg_user_time/counter)/normalization)
+        sys_time_results.append((avg_sys_time/counter)/normalization)
         sys_MBps_results.append((size/2**20)/(avg_sys_time/counter))
-        real_time_results.append((avg_real_time/counter))
+        real_time_results.append((avg_real_time/counter)/normalization)
 
     fig, axes = plt.subplots(nrows=5, ncols=2)
     fig.suptitle("Input file: "+os.path.basename(json_path), fontsize=30)
@@ -89,7 +90,7 @@ def main(json_path="output-PIC.json"):
     ax[2].set_facecolor("whitesmoke")
     plt.sca(ax[2])
     ax[2].set_title("Average file access time (user)", position=(0.5, 0.6))
-    ax[2].set_xlabel("seconds [s]")
+    ax[2].set_xlabel("seconds per MB [s/MB]" if normalize else "seconds [s]")
     ax[2].set_ylabel("counts")
     leg_n_entries = mpatches.Patch(color='darkgreen', label="{} files tested\n {} times each".format(n_entries, n_tests - 1))
     plt.legend(handles=[leg_n_entries])
@@ -98,7 +99,7 @@ def main(json_path="output-PIC.json"):
     ax[3].set_facecolor("whitesmoke")
     plt.sca(ax[3])
     ax[3].set_title("First file access time (user)", position=(0.5, 0.6))
-    ax[3].set_xlabel("seconds [s]")
+    ax[3].set_xlabel("seconds per MB [s/MB]" if normalize else "seconds [s]")
     ax[3].set_ylabel("counts")
     leg_n_entries = mpatches.Patch(color='lime', label="{} files tested".format(n_entries))
     plt.legend(handles=[leg_n_entries])
@@ -111,7 +112,7 @@ def main(json_path="output-PIC.json"):
     ax[4].set_facecolor("whitesmoke")
     plt.sca(ax[4])
     ax[4].set_title("Average file access time (sys)", position=(0.5, 0.6))
-    ax[4].set_xlabel("seconds [s]")
+    ax[4].set_xlabel("seconds per MB [s/MB]" if normalize else "seconds [s]")
     ax[4].set_ylabel("counts")
     leg_n_entries = mpatches.Patch(color='darkorange', label="{} files tested\n {} times each".format(n_entries, n_tests - 1))
     plt.legend(handles=[leg_n_entries])
@@ -120,7 +121,7 @@ def main(json_path="output-PIC.json"):
     ax[5].set_facecolor("whitesmoke")
     plt.sca(ax[5])
     ax[5].set_title("First file access time (sys)", position=(0.5, 0.6))
-    ax[5].set_xlabel("seconds [s]")
+    ax[5].set_xlabel("seconds per MB [s/MB]" if normalize else "seconds [s]")
     ax[5].set_ylabel("counts")
     leg_n_entries = mpatches.Patch(color='gold', label="{} files tested".format(n_entries))
     plt.legend(handles=[leg_n_entries])
@@ -133,7 +134,7 @@ def main(json_path="output-PIC.json"):
     ax[6].set_facecolor("whitesmoke")
     plt.sca(ax[6])
     ax[6].set_title("Average file access time (real)", position=(0.5, 0.6))
-    ax[6].set_xlabel("seconds [s]")
+    ax[6].set_xlabel("seconds per MB [s/MB]" if normalize else "seconds [s]")
     ax[6].set_ylabel("counts")
     leg_n_entries = mpatches.Patch(color='maroon', label="{} files tested\n {} times each".format(n_entries, n_tests - 1))
     plt.legend(handles=[leg_n_entries])
@@ -142,13 +143,13 @@ def main(json_path="output-PIC.json"):
     ax[7].set_facecolor("whitesmoke")
     plt.sca(ax[7])
     ax[7].set_title("First file access time (real)", position=(0.5, 0.6))
-    ax[7].set_xlabel("seconds [s]")
+    ax[7].set_xlabel("seconds per MB [s/MB]" if normalize else "seconds [s]")
     ax[7].set_ylabel("counts")
     leg_n_entries = mpatches.Patch(color='orangered', label="{} files tested".format(n_entries))
     plt.legend(handles=[leg_n_entries])
 
     real_time_xlim = [min(ax[6].get_xlim()[0], ax[7].get_xlim()[0]), max(ax[6].get_xlim()[1], ax[7].get_xlim()[1])]
-    if abs(ax[6].get_xlim()[1] - ax[7].get_xlim()[1])/ax[6].get_xlim()[1] > 2:
+    if abs(ax[6].get_xlim()[1] - ax[7].get_xlim()[1])/ax[6].get_xlim()[1] > 5:
         ax[6].text(0.5, 0.5, "Cached", style='italic', fontsize=18, transform=ax[6].transAxes, ha='center', va='center')
         ax[7].text(0.5, 0.5, "Not yet in cache", style='italic', fontsize=18, transform=ax[7].transAxes, ha='center', va='center')
     ax[6].set_xlim(real_time_xlim)
@@ -181,5 +182,6 @@ def main(json_path="output-PIC.json"):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Visualize IGWN Data Checker output files')
     parser.add_argument("json_path", type=str, help='Path of input JSON file.')
+    parser.add_argument('-n', "--normalized", action='store_true', help="Normalize times over file size.")
     args = parser.parse_args()
-    main(json_path=args.json_path)
+    main(json_path=args.json_path, normalize=args.normalized)
