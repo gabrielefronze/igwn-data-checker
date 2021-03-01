@@ -2,6 +2,7 @@ universe = vanilla
 
 transfer_input_files = <SETTINGS_GO_HERE>
 executable = <EXECUTABLE_GOES_HERE>
+arguments = <FRCHECK_EXECUTABLE_GOES_HERE>
 transfer_output_files = output.json
 
 log = std.log

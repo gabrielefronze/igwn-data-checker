@@ -4,6 +4,7 @@ import os
 import sys
 import json
 import subprocess
+import argparse
 
 def ConvertTime(time_str):
     try:
@@ -14,16 +15,16 @@ def ConvertTime(time_str):
         return time_str
 
 
-def FrCheckWrapper(file_path, verbose):
-    if not os.path.isfile("/cvmfs/virgo.ego-gw.it/software/VCS-12.1/python/anaconda2/bin/FrCheck"):
-        print("Executable /cvmfs/virgo.ego-gw.it/software/VCS-12.1/python/anaconda2/bin/FrCheck not found. Aborting.".format(file_path))
+def FrCheckWrapper(frcheck_executable, file_path, verbose):
+    if not os.path.isfile(frcheck_executable):
+        print("Executable {} not found. Aborting.".format(frcheck_executable, file_path))
         return {"checksum_status": False, "timer": {"real": 0, "user": 0, "sys": 0}, "status": False}
 
     if not os.path.isfile(file_path):
         print("File {} not found. Aborting.".format(file_path))
         return {"checksum_status": False, "timer": {"real": 0, "user": 0, "sys": 0}, "status": False}
 
-    cmd = "time /cvmfs/virgo.ego-gw.it/software/VCS-12.1/python/anaconda2/bin/FrCheck -d 1 -i "+file_path
+    cmd = "time " + frcheck_executable + " -d 1 -i "+file_path
 
     if verbose:
         print("\n\n"+cmd+"\n")
@@ -52,12 +53,12 @@ def FrCheckWrapper(file_path, verbose):
     return {"checksum_status": checksum_status, "timer": {"real": time_real, "user": time_user, "sys": time_sys}, "status": True}
 
 
-def Handler(path, verbose):
+def Handler(frcheck_executable, path, verbose):
     results = {}
     abs_path = os.path.abspath(path)
     if os.path.isdir(abs_path):
         for path in os.listdir(abs_path):
-            r = Handler(os.path.join(abs_path, path), verbose)
+            r = Handler(frcheck_executable, os.path.join(abs_path, path), verbose)
             for p, data in r.items():
                 if p in results:
                     results[p]["results"] += data["results"]
@@ -68,7 +69,7 @@ def Handler(path, verbose):
     elif os.path.isfile(abs_path):
         if abs_path.endswith(".gwf"):
             try:
-                res = FrCheckWrapper(abs_path, verbose)
+                res = FrCheckWrapper(frcheck_executable, abs_path, verbose)
                 if abs_path in results:
                     results[abs_path]["results"] += [res]
                 else:
@@ -91,13 +92,13 @@ def Handler(path, verbose):
     return results
 
 
-def BulkHandler(settings):
+def BulkHandler(frcheck_executable, settings):
     results = {}
     paths = settings["paths_to_test"]
 
     for path in paths:
         for i in range(0, settings["settings"]["runs_per_file"]):
-            partial_results = Handler(os.path.abspath(path), settings["settings"]["verbose"])
+            partial_results = Handler(frcheck_executable, os.path.abspath(path), settings["settings"]["verbose"])
             for p,measures in partial_results.items():
                 if p in results:
                     results[p]["results"] += measures["results"]
@@ -108,8 +109,12 @@ def BulkHandler(settings):
 
 
 def main():
-    settings = json.load(open('settings.json'))
-    results = BulkHandler(settings)
+    parser = argparse.ArgumentParser("IGWN data checker")
+    parser.add_argument("frcheck_executable", nargs='?', help="FrCheck executable path.", default="/cvmfs/oasis.opensciencegrid.org/ligo/deploy/sw/conda/envs/igwn-py38-20210107/bin/FrCheck")
+    parser.add_argument("settings", nargs='?', help="Settings file path.", default="./settings.json")
+    args = parser.parse_args()
+    settings = json.load(open(args.settings))
+    results = BulkHandler(args.frcheck_executable, settings)
     print(json.dumps(results, indent=2), file=open("output.json", "w"))
 
 
