@@ -1,0 +1,21 @@
+universe = vanilla
+
+transfer_input_files = <SETTINGS_GO_HERE>
+executable = <EXECUTABLE_GOES_HERE>
+transfer_output_files = output.json
+
+log = std.log
+output = std.out
+error = std.err
+
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+
+use_x509userproxy = true
+requirements = (HAS_LIGO_FRAMES=?=True)
++DESIRED_Sites = "<PUT_COMPUTING_CENTER_HERE>"
+
+accounting_group = ligo.prod.o3.burst.snews.raven
+accounting_group_user = gabriele.fronze
+
+queue 1
