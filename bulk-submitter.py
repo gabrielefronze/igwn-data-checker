@@ -31,7 +31,7 @@ def replace_text_in_file(path, replacements):
     f.close()
 
 def condor_submit(submit_file):
-    condor_submit_command = subprocess.run(["condor_submit", submit_file], stdout=subprocess.PIPE, text=True)
+    condor_submit_command = subprocess.run(["condor_submit", submit_file], stdout=subprocess.PIPE, , stderr=subprocess.PIPE)
     print("Condor output: {}".format(condor_submit_command.stdout))
 
 def main():
