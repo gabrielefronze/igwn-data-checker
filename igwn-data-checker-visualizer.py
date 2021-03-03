@@ -7,8 +7,12 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
+import matplotlib.patches as patches
 
-def main(json_path="output-PIC.json", normalize=False):
+def main(json_path="output-PIC.json", normalize=False, title = None):
+    if not title:
+        title = "Input file: "+os.path.basename(json_path)
+
     paths = {}
     valid_counter = 0
     statuses = []
@@ -53,20 +57,19 @@ def main(json_path="output-PIC.json", normalize=False):
                     avg_sys_time += r["timer"]["sys"] if r["timer"]["sys"]>0 else 0.01
                     avg_real_time += float(real_time[0])*60+float(real_time[1])
 
-
         user_time_results.append((avg_user_time/counter)/normalization)
         sys_time_results.append((avg_sys_time/counter)/normalization)
         sys_MBps_results.append((size/2**20)/(avg_sys_time/counter))
         real_time_results.append((avg_real_time/counter)/normalization)
 
     fig, axes = plt.subplots(nrows=5, ncols=2)
-    fig.suptitle("Input file: "+os.path.basename(json_path), fontsize=30)
+    fig.suptitle(title, fontsize=30)
     ax = axes.flatten()
 
     n_checksums = len(checksum_results)
     n_entries = valid_counter
     n_statuses = len(statuses)
-    n_tests = int(n_checksums/n_entries)
+    n_tests = counter + 1
 
     ax[0].hist(checksum_results, 2, histtype='bar', weights=[1/n_checksums*100] * n_checksums, color='navy')
     ax[0].set_facecolor("whitesmoke")
@@ -148,10 +151,11 @@ def main(json_path="output-PIC.json", normalize=False):
     leg_n_entries = mpatches.Patch(color='orangered', label="{} files tested".format(n_entries))
     plt.legend(handles=[leg_n_entries])
 
-    real_time_xlim = [min(ax[6].get_xlim()[0], ax[7].get_xlim()[0]), max(ax[6].get_xlim()[1], ax[7].get_xlim()[1])]
-    if abs(ax[6].get_xlim()[1] - ax[7].get_xlim()[1])/ax[6].get_xlim()[1] > 5:
-        ax[6].text(0.5, 0.5, "Cached", style='italic', fontsize=18, transform=ax[6].transAxes, ha='center', va='center')
-        ax[7].text(0.5, 0.5, "Not yet in cache", style='italic', fontsize=18, transform=ax[7].transAxes, ha='center', va='center')
+    real_time_xlim = [0, max(ax[6].get_xlim()[1], ax[7].get_xlim()[1])]
+    rect = patches.Rectangle((0,0), ax[6].get_xlim()[1], ax[7].get_ylim()[1], linewidth=1, edgecolor='g', facecolor="#00FF0022")
+    rect2 = patches.Rectangle((ax[6].get_xlim()[1],0), ax[7].get_xlim()[1], ax[7].get_ylim()[1], linewidth=1, edgecolor='g', facecolor="#FF000022")
+    ax[7].add_patch(rect)
+    ax[7].add_patch(rect2)
     ax[6].set_xlim(real_time_xlim)
     ax[7].set_xlim(real_time_xlim)
 
@@ -182,6 +186,7 @@ def main(json_path="output-PIC.json", normalize=False):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Visualize IGWN Data Checker output files')
     parser.add_argument("json_path", type=str, help='Path of input JSON file.')
+    parser.add_argument('-t', "--title", help="Title of the output image.")
     parser.add_argument('-n', "--normalized", action='store_true', help="Normalize times over file size.")
     args = parser.parse_args()
-    main(json_path=args.json_path, normalize=args.normalized)
+    main(json_path=args.json_path, normalize=args.normalized, title=args.title)
