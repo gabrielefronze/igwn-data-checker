@@ -77,7 +77,7 @@ def Handler(frcheck_executable, path, verbose, policy = "all"):
                 fraction = int(policy.replace('%',''))/100
                 process_file = (random.random() <= fraction)
             else:
-                print("Unrecognized policy. Fallback to \"all\"")
+                print("Unrecognized policy. Falling back to \"all\"")
                 process_file = True
             
             if process_file:
