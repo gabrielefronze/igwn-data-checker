@@ -54,12 +54,12 @@ def FrCheckWrapper(frcheck_executable, file_path, verbose):
     return {"checksum_status": checksum_status, "timer": {"real": time_real, "user": time_user, "sys": time_sys}, "status": True}
 
 
-def Handler(frcheck_executable, path, verbose, policy = "all"):
+def Handler(frcheck_executable, path, verbose, policy):
     results = {}
     abs_path = os.path.abspath(path)
     if os.path.isdir(abs_path):
         for path in os.listdir(abs_path):
-            r = Handler(frcheck_executable, os.path.join(abs_path, path), verbose)
+            r = Handler(frcheck_executable, os.path.join(abs_path, path), verbose, policy)
             for p, data in r.items():
                 if p in results:
                     results[p]["results"] += data["results"]
