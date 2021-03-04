@@ -5,6 +5,7 @@ import sys
 import json
 import subprocess
 import argparse
+import random
 
 def ConvertTime(time_str):
     try:
@@ -53,7 +54,7 @@ def FrCheckWrapper(frcheck_executable, file_path, verbose):
     return {"checksum_status": checksum_status, "timer": {"real": time_real, "user": time_user, "sys": time_sys}, "status": True}
 
 
-def Handler(frcheck_executable, path, verbose):
+def Handler(frcheck_executable, path, verbose, policy = "all"):
     results = {}
     abs_path = os.path.abspath(path)
     if os.path.isdir(abs_path):
@@ -68,23 +69,37 @@ def Handler(frcheck_executable, path, verbose):
                     results[p]["results"] = data["results"]
     elif os.path.isfile(abs_path):
         if abs_path.endswith(".gwf"):
-            try:
-                res = FrCheckWrapper(frcheck_executable, abs_path, verbose)
-                if abs_path in results:
-                    results[abs_path]["results"] += [res]
-                else:
-                    results[abs_path] = {}
-                    results[abs_path]["size"] = os.path.getsize(abs_path)
-                    results[abs_path]["results"] = [res]
-            except:
-                print("Error processing path {}. Skipping.".format(abs_path))
-                res = {"checksum_status": False, "timer": {"real": 0, "user": 0, "sys": 0}, "status": False}
-                if abs_path in results:
-                    results[abs_path]["results"] += [res]
-                else:
-                    results[abs_path] = {}
-                    results[abs_path]["size"] = os.path.getsize(abs_path)
-                    results[abs_path]["results"] = [res]
+            process_file = None
+            
+            if policy == "all":
+                process_file = True
+            elif policy.endswith('%'):
+                fraction = int(policy.replace('%',''))/100
+                process_file = (random.random() <= fraction)
+            else:
+                print("Unrecognized policy. Fallback to \"all\"")
+                process_file = True
+            
+            if process_file:
+                try:
+                    res = FrCheckWrapper(frcheck_executable, abs_path, verbose)
+                    if abs_path in results:
+                        results[abs_path]["results"] += [res]
+                    else:
+                        results[abs_path] = {}
+                        results[abs_path]["size"] = os.path.getsize(abs_path)
+                        results[abs_path]["results"] = [res]
+                except:
+                    print("Error processing path {}. Skipping.".format(abs_path))
+                    res = {"checksum_status": False, "timer": {"real": 0, "user": 0, "sys": 0}, "status": False}
+                    if abs_path in results:
+                        results[abs_path]["results"] += [res]
+                    else:
+                        results[abs_path] = {}
+                        results[abs_path]["size"] = os.path.getsize(abs_path)
+                        results[abs_path]["results"] = [res]
+            else:
+                print("Skipping due to policy.")
         else:
             print("Path {} not valid. Not a .gwf file".format(abs_path))
     else:
@@ -95,10 +110,15 @@ def Handler(frcheck_executable, path, verbose):
 def BulkHandler(frcheck_executable, settings):
     results = {}
     paths = settings["paths_to_test"]
+    
+    if "policy" in settings:
+        policy = settings["policy"]
+    else:
+        policy = "all"
 
     for path in paths:
         for i in range(0, settings["settings"]["runs_per_file"]):
-            partial_results = Handler(frcheck_executable, os.path.abspath(path), settings["settings"]["verbose"])
+            partial_results = Handler(frcheck_executable, os.path.abspath(path), settings["settings"]["verbose"], policy)
             for p,measures in partial_results.items():
                 if p in results:
                     results[p]["results"] += measures["results"]
