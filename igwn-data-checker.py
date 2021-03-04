@@ -72,10 +72,15 @@ def Handler(frcheck_executable, path, verbose, policy = "all"):
             process_file = None
             
             if policy == "all":
+                print("Processing file since policy is \"all\"")
                 process_file = True
             elif policy.endswith('%'):
                 fraction = int(policy.replace('%',''))/100
                 process_file = (random.random() <= fraction)
+                if process_file:
+                    print("Processing file due to policy.")
+                else:
+                    print("Skipping file due to policy.")
             else:
                 print("Unrecognized policy. Falling back to \"all\"")
                 process_file = True
