@@ -103,8 +103,6 @@ def Handler(frcheck_executable, path, verbose, policy):
                         results[abs_path] = {}
                         results[abs_path]["size"] = os.path.getsize(abs_path)
                         results[abs_path]["results"] = [res]
-            else:
-                print("Skipping due to policy.")
         else:
             print("Path {} not valid. Not a .gwf file".format(abs_path))
     else:
