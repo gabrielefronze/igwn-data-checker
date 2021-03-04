@@ -117,7 +117,7 @@ def BulkHandler(frcheck_executable, settings):
     paths = settings["paths_to_test"]
     
     if "policy" in settings:
-        policy = settings["policy"]
+        policy = settings["settings"]["policy"]
     else:
         policy = "all"
 
