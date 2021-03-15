@@ -73,6 +73,7 @@ def main(json_path="output-PIC.json", normalize=False, title = None, save = None
     n_entries = valid_counter
     n_statuses = len(statuses)
     n_tests = counter + 1
+    n_bins = int(max(n_entries / 2, 1))
 
     ax[0].hist(checksum_results, 2, histtype='bar', weights=[1/n_checksums*100] * n_checksums, color='navy')
     ax[0].set_facecolor("whitesmoke")
@@ -92,7 +93,7 @@ def main(json_path="output-PIC.json", normalize=False, title = None, save = None
     leg_n_entries = mpatches.Patch(color='blue', label="{} files tested\n {} times each".format(n_entries, n_tests))
     plt.legend(handles=[leg_n_entries])
 
-    ax[2].hist(user_time_results, int(n_entries/2), histtype='bar', color='darkgreen')
+    ax[2].hist(user_time_results, n_bins, histtype='bar', color='darkgreen')
     ax[2].set_facecolor("whitesmoke")
     plt.sca(ax[2])
     ax[2].set_title("Average file access time (user)", position=(0.5, 0.6))
@@ -101,7 +102,7 @@ def main(json_path="output-PIC.json", normalize=False, title = None, save = None
     leg_n_entries = mpatches.Patch(color='darkgreen', label="{} files tested\n {} times each".format(n_entries, n_tests - 1))
     plt.legend(handles=[leg_n_entries])
 
-    ax[3].hist(first_user_time_results, int(n_entries/2), histtype='bar', color='lime')
+    ax[3].hist(first_user_time_results, n_bins, histtype='bar', color='lime')
     ax[3].set_facecolor("whitesmoke")
     plt.sca(ax[3])
     ax[3].set_title("First file access time (user)", position=(0.5, 0.6))
@@ -114,7 +115,7 @@ def main(json_path="output-PIC.json", normalize=False, title = None, save = None
     ax[2].set_xlim(user_time_xlim)
     ax[3].set_xlim(user_time_xlim)
 
-    ax[4].hist(sys_time_results, int(n_entries/2), histtype='bar', color='darkorange')
+    ax[4].hist(sys_time_results, n_bins, histtype='bar', color='darkorange')
     ax[4].set_facecolor("whitesmoke")
     plt.sca(ax[4])
     ax[4].set_title("Average file access time (sys)", position=(0.5, 0.6))
@@ -123,7 +124,7 @@ def main(json_path="output-PIC.json", normalize=False, title = None, save = None
     leg_n_entries = mpatches.Patch(color='darkorange', label="{} files tested\n {} times each".format(n_entries, n_tests - 1))
     plt.legend(handles=[leg_n_entries])
 
-    ax[5].hist(first_sys_time_results, int(n_entries/2), histtype='bar', color='gold')
+    ax[5].hist(first_sys_time_results, n_bins, histtype='bar', color='gold')
     ax[5].set_facecolor("whitesmoke")
     plt.sca(ax[5])
     ax[5].set_title("First file access time (sys)", position=(0.5, 0.6))
@@ -136,7 +137,7 @@ def main(json_path="output-PIC.json", normalize=False, title = None, save = None
     ax[4].set_xlim(sys_time_xlim)
     ax[5].set_xlim(sys_time_xlim)
     
-    ax[6].hist(real_time_results, int(n_entries/2), histtype='bar', color='maroon')
+    ax[6].hist(real_time_results, n_bins, histtype='bar', color='maroon')
     ax[6].set_facecolor("whitesmoke")
     plt.sca(ax[6])
     ax[6].set_title("Average file access time (real)", position=(0.5, 0.6))
@@ -145,7 +146,7 @@ def main(json_path="output-PIC.json", normalize=False, title = None, save = None
     leg_n_entries = mpatches.Patch(color='maroon', label="{} files tested\n {} times each".format(n_entries, n_tests - 1))
     plt.legend(handles=[leg_n_entries])
 
-    ax[7].hist(first_real_time_results, int(n_entries/2), histtype='bar', color='orangered')
+    ax[7].hist(first_real_time_results, n_bins, histtype='bar', color='orangered')
     ax[7].set_facecolor("whitesmoke")
     plt.sca(ax[7])
     ax[7].set_title("First file access time (real)", position=(0.5, 0.6))
@@ -162,7 +163,7 @@ def main(json_path="output-PIC.json", normalize=False, title = None, save = None
     ax[6].set_xlim(real_time_xlim)
     ax[7].set_xlim(real_time_xlim)
 
-    ax[8].hist(file_sizes, int(n_entries/2), histtype='bar', color='deepskyblue')
+    ax[8].hist(file_sizes, n_bins, histtype='bar', color='deepskyblue')
     ax[8].set_facecolor("whitesmoke")
     plt.sca(ax[8])
     ax[8].set_title("File sizes distribution", position=(0.5, 0.6))
@@ -171,7 +172,7 @@ def main(json_path="output-PIC.json", normalize=False, title = None, save = None
     leg_n_entries = mpatches.Patch(color='deepskyblue', label="{} files tested\n {} times each".format(n_entries, n_tests))
     plt.legend(handles=[leg_n_entries])
 
-    ax[9].hist(sys_MBps_results, int(n_entries/2), histtype='bar', color='purple')
+    ax[9].hist(sys_MBps_results, n_bins, histtype='bar', color='purple')
     ax[9].set_facecolor("whitesmoke")
     plt.sca(ax[9])
     ax[9].set_title("File transfer speed", position=(0.5, 0.6))
