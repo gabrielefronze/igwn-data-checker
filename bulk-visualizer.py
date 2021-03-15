@@ -5,7 +5,7 @@ import sys
 import subprocess
 
 def main():
-    root_path = os.path.dirname(__file__)
+    root_path = os.path.abspath(os.path.dirname(__file__))
     path = os.path.join(root_path, "output")
     for cc in os.listdir(path):
         cc_dir = os.path.join(path, cc)
