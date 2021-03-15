@@ -92,7 +92,7 @@ def main(frcheck_path = None, settings_file_path = None):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser("Bulk submitter for IGWN data checker")
-    parser.add_argument("frcheck_executable", nargs='?', help="FrCheck executable path.", default="/cvmfs/oasis.opensciencegrid.org/ligo/deploy/sw/conda/envs/igwn-py38-20210107/bin/FrCheck")
     parser.add_argument("settings", nargs='?', help="Settings file path.", default="./settings.json")
+    parser.add_argument("frcheck_executable", nargs='?', help="FrCheck executable path.", default="/cvmfs/oasis.opensciencegrid.org/ligo/deploy/sw/conda/envs/igwn-py38-20210107/bin/FrCheck")
     args = parser.parse_args()
     main(frcheck_path = args.frcheck_executable, settings_file_path=args.settings)
