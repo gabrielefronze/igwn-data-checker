@@ -85,7 +85,7 @@ def main(frcheck_path = None, settings_file_path = None):
                               [computing_center_string , cc]])
         
         os.chdir(output_path)
-        # condor_submit(submit_file_path)
+        condor_submit(submit_file_path)
         print("=================================================================================================================================")
         os.chdir(root_dir)
 
