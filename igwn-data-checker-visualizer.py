@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import matplotlib.patches as patches
 
-def main(json_path="output-PIC.json", normalize=False, title = None):
+def main(json_path="output-PIC.json", normalize=False, title = None, save = None):
     if not title:
         title = "Input file: "+os.path.basename(json_path)
 
@@ -64,6 +64,7 @@ def main(json_path="output-PIC.json", normalize=False, title = None):
 
     fig, axes = plt.subplots(nrows=5, ncols=2)
     fig.suptitle(title, fontsize=30)
+    fig.set_size_inches(18.5, 12.5, forward=True)
     ax = axes.flatten()
 
     n_checksums = len(checksum_results)
@@ -180,7 +181,13 @@ def main(json_path="output-PIC.json", normalize=False, title = None):
     plt.rcParams.update({'figure.autolayout': True})
     fig.subplots_adjust(hspace=0.4)
     plt.subplots_adjust(left=0.05, right=0.95, top=0.90, bottom=0.05)
-    plt.show()
+
+    if not save:
+        print("Showing")
+        plt.show()
+    else:
+        print("Saving")
+        plt.savefig('output.pdf')  
 
 
 if __name__ == "__main__":
@@ -188,5 +195,6 @@ if __name__ == "__main__":
     parser.add_argument("json_path", type=str, help='Path of input JSON file.')
     parser.add_argument('-t', "--title", help="Title of the output image.")
     parser.add_argument('-n', "--normalized", action='store_true', help="Normalize times over file size.")
+    parser.add_argument('-s', "--save", action='store_true', help="Saves output as image.")
     args = parser.parse_args()
-    main(json_path=args.json_path, normalize=args.normalized, title=args.title)
+    main(json_path=args.json_path, normalize=args.normalized, title=args.title, save=args.save)

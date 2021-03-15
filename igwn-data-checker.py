@@ -57,6 +57,10 @@ def FrCheckWrapper(frcheck_executable, file_path, verbose):
 def Handler(frcheck_executable, path, verbose, policy):
     results = {}
     abs_path = os.path.abspath(path)
+    
+    if policy.endswith('%'):
+        fraction = int(policy.replace('%',''))/100
+
     if os.path.isdir(abs_path):
         for path in os.listdir(abs_path):
             r = Handler(frcheck_executable, os.path.join(abs_path, path), verbose, policy)
@@ -75,7 +79,6 @@ def Handler(frcheck_executable, path, verbose, policy):
                 print("Processing file since policy is \"all\"")
                 process_file = True
             elif policy.endswith('%'):
-                fraction = int(policy.replace('%',''))/100
                 process_file = (random.random() <= fraction)
                 if process_file:
                     print("Processing file due to policy.")
