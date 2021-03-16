@@ -3,6 +3,7 @@
 import os
 import sys
 import subprocess
+import datetime
 
 def main():
     root_path = os.path.abspath(os.path.dirname(__file__))
@@ -15,15 +16,24 @@ def main():
         for date in os.listdir(cc_dir):
             print("\tDate {}".format(date))
             date_path = os.path.join(cc_dir, date)
+            prev_timestamp = None
             for time in os.listdir(date_path):
                 print("\t\tTime {}".format(time))
                 time_path = os.path.join(date_path, time)
 
-                print("Creating symlink.")
-                link_path = os.path.join(cc_dir, "latest")
-                if os.path.islink(link_path):
-                    os.remove(link_path)
-                os.symlink(time_path, link_path)
+                timestamp = datetime.datetime.strptime("{} {}.0".format(date, time), '%Y-%m-%d %H:%M:%S.%f')
+
+                if not prev_timestamp or timestamp > prev_timestamp:
+                    prev_timestamp = timestamp
+                    link_path = os.path.join(cc_dir, "latest")
+                    if os.path.islink(link_path):
+                        print("\t\tRerouting latest symlink.")
+                        os.remove(link_path)
+                    else:
+                        print("\t\tCreating latest symlink.")
+                    os.symlink(time_path, link_path)
+                else:
+                    print("\t\tNot latest results. Avoiding symlink.")
                 
                 if os.path.isfile(os.path.join(time_path, "output.json")):
                     print("\t\tOutput found.")
