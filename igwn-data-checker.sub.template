@@ -8,6 +8,8 @@ transfer_output_files = output.json
 log = std.log
 output = std.out
 error = std.err
+stream_output = True
+stream_error = True
 
 should_transfer_files = YES
 when_to_transfer_output = ON_EXIT
