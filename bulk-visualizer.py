@@ -23,7 +23,7 @@ def main():
                 link_path = os.path.join(cc_dir, "latest")
                 if os.path.islink(link_path):
                     os.remove(link_path)
-                os.symlink(time_path, )
+                os.symlink(time_path, link_path)
                 
                 if os.path.isfile(os.path.join(time_path, "output.json")):
                     print("\t\tOutput found.")
