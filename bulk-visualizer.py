@@ -19,6 +19,7 @@ def main():
                 print("\t\tTime {}".format(time))
                 time_path = os.path.join(date_path, time)
                 if os.path.isfile(os.path.join(time_path, "output.json")):
+                    os.symlink(time_path, os.path.join(cc_dir, "latest"))
                     print("\t\tOutput found.")
                     os.chdir(time_path)
                     vis = subprocess.run([os.path.join(root_path, "igwn-data-checker-visualizer.py"),
