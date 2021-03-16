@@ -2,11 +2,9 @@
     "settings": {
         "runs_per_file": 3,
         "verbose": false,
-        "policy": "10%"
+        "policy": "2%"
     },
     "paths_to_test" : [
-        "/cvmfs/ligo.osgstorage.org/frames/O3/V1Online/V-V1Online-12670",
-        "/cvmfs/ligo.osgstorage.org/frames/O3/V1Online/V-V1Online-12671",
-        "/cvmfs/ligo.osgstorage.org/frames/O3/V1Online/V-V1Online-12672"
+        "/cvmfs/ligo.osgstorage.org/frames/O3/V1Online/"
     ]
 }
