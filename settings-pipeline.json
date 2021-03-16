@@ -2,7 +2,7 @@
     "settings": {
         "runs_per_file": 3,
         "verbose": false,
-        "policy": "0.002%"
+        "policy": "0.2%"
     },
     "paths_to_test" : [
         "/cvmfs/ligo.osgstorage.org/frames/O3/V1Online/"
