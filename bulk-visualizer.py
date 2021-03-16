@@ -43,7 +43,7 @@ def main():
 
                     timestamp = datetime.datetime.strptime("{} {}.0".format(date, time), '%Y-%m-%d %H:%M:%S.%f')
 
-                    if not prev_timestamp or (timestamp > prev_timestamp and os.path.isfile(os.path.join(time_path, "output.processed.json"))):
+                    if (not prev_timestamp or timestamp > prev_timestamp) and os.path.isfile(os.path.join(time_path, "output.pdf")):
                         prev_timestamp = timestamp
                         link_path = os.path.join(cc_dir, "latest")
                         if os.path.islink(link_path):
