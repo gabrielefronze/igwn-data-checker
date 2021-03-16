@@ -21,20 +21,6 @@ def main():
                 for time in os.listdir(date_path):
                     print("\t\tTime {}".format(time))
                     time_path = os.path.join(date_path, time)
-
-                    timestamp = datetime.datetime.strptime("{} {}.0".format(date, time), '%Y-%m-%d %H:%M:%S.%f')
-
-                    if not prev_timestamp or timestamp > prev_timestamp:
-                        prev_timestamp = timestamp
-                        link_path = os.path.join(cc_dir, "latest")
-                        if os.path.islink(link_path):
-                            print("\t\tRerouting latest symlink.")
-                            os.remove(link_path)
-                        else:
-                            print("\t\tCreating latest symlink.")
-                        os.symlink(time_path, link_path)
-                    else:
-                        print("\t\tNot latest results. Avoiding symlink.")
                     
                     if os.path.isfile(os.path.join(time_path, "output.json")):
                         print("\t\tOutput found.")
@@ -54,6 +40,20 @@ def main():
                         print("\t\tOutput already processed.")
                     else:
                         print("\t\tNo output found.")
+
+                    timestamp = datetime.datetime.strptime("{} {}.0".format(date, time), '%Y-%m-%d %H:%M:%S.%f')
+
+                    if not prev_timestamp or (timestamp > prev_timestamp and os.path.isfile(os.path.join(time_path, "output.processed.json")):
+                        prev_timestamp = timestamp
+                        link_path = os.path.join(cc_dir, "latest")
+                        if os.path.islink(link_path):
+                            print("\t\tRerouting latest symlink.")
+                            os.remove(link_path)
+                        else:
+                            print("\t\tCreating latest symlink.")
+                        os.symlink(time_path, link_path)
+                    else:
+                        print("\t\tNot latest results. Avoiding symlink.")
 
 if __name__ == "__main__":
     main()
