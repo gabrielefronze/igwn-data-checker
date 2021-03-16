@@ -2,9 +2,16 @@
     "settings": {
         "runs_per_file": 3,
         "verbose": false,
-        "policy": "0.2%"
+        "policy": "2%"
     },
     "paths_to_test" : [
-        "/cvmfs/ligo.osgstorage.org/frames/O3/V1Online/"
+        "/cvmfs/ligo.osgstorage.org/frames/O3/V1Online/V-V1Online-12386",
+        "/cvmfs/ligo.osgstorage.org/frames/O3/V1Online/V-V1Online-12431",
+        "/cvmfs/ligo.osgstorage.org/frames/O3/V1Online/V-V1Online-12462",
+        "/cvmfs/ligo.osgstorage.org/frames/O3/V1Online/V-V1Online-12541",
+        "/cvmfs/ligo.osgstorage.org/frames/O3/V1Online/V-V1Online-12598",
+        "/cvmfs/ligo.osgstorage.org/frames/O3/V1Online/V-V1Online-12648",
+        "/cvmfs/ligo.osgstorage.org/frames/O3/V1Online/V-V1Online-12671",
+        "/cvmfs/ligo.osgstorage.org/frames/O3/V1Online/V-V1Online-12696"
     ]
 }
