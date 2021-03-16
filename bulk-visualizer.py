@@ -51,7 +51,9 @@ def main():
                             os.remove(link_path)
                         else:
                             print("\t\tCreating latest symlink.")
-                        os.symlink(time_path, link_path)
+                        os.chdir(link_path)
+                        os.symlink("./{}/{}".format(date, time), link_path)
+                        os.chdir(root_path)
                     else:
                         print("\t\tNot latest results. Avoiding symlink.")
 
