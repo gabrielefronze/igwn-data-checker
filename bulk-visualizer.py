@@ -14,45 +14,46 @@ def main():
         print("=================================================================================================================================")
         cc_dir = os.path.join(path, cc)
         for date in os.listdir(cc_dir):
-            print("\tDate {}".format(date))
-            date_path = os.path.join(cc_dir, date)
-            prev_timestamp = None
-            for time in os.listdir(date_path):
-                print("\t\tTime {}".format(time))
-                time_path = os.path.join(date_path, time)
+            if not date == "latest":
+                print("\tDate {}".format(date))
+                date_path = os.path.join(cc_dir, date)
+                prev_timestamp = None
+                for time in os.listdir(date_path):
+                    print("\t\tTime {}".format(time))
+                    time_path = os.path.join(date_path, time)
 
-                timestamp = datetime.datetime.strptime("{} {}.0".format(date, time), '%Y-%m-%d %H:%M:%S.%f')
+                    timestamp = datetime.datetime.strptime("{} {}.0".format(date, time), '%Y-%m-%d %H:%M:%S.%f')
 
-                if not prev_timestamp or timestamp > prev_timestamp:
-                    prev_timestamp = timestamp
-                    link_path = os.path.join(cc_dir, "latest")
-                    if os.path.islink(link_path):
-                        print("\t\tRerouting latest symlink.")
-                        os.remove(link_path)
+                    if not prev_timestamp or timestamp > prev_timestamp:
+                        prev_timestamp = timestamp
+                        link_path = os.path.join(cc_dir, "latest")
+                        if os.path.islink(link_path):
+                            print("\t\tRerouting latest symlink.")
+                            os.remove(link_path)
+                        else:
+                            print("\t\tCreating latest symlink.")
+                        os.symlink(time_path, link_path)
                     else:
-                        print("\t\tCreating latest symlink.")
-                    os.symlink(time_path, link_path)
-                else:
-                    print("\t\tNot latest results. Avoiding symlink.")
-                
-                if os.path.isfile(os.path.join(time_path, "output.json")):
-                    print("\t\tOutput found.")
-                    os.chdir(time_path)
-                    vis = subprocess.run([os.path.join(root_path, "igwn-data-checker-visualizer.py"),
-                                         "./output.json", 
-                                         "-t {} status - {} @ {} ".format(cc, date, time),
-                                         "-n",
-                                         "-s"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                    if vis.stderr:
-                        print("\t\tErrors occurred.")
-                        print(vis.stderr.decode("utf-8"))
+                        print("\t\tNot latest results. Avoiding symlink.")
+                    
+                    if os.path.isfile(os.path.join(time_path, "output.json")):
+                        print("\t\tOutput found.")
+                        os.chdir(time_path)
+                        vis = subprocess.run([os.path.join(root_path, "igwn-data-checker-visualizer.py"),
+                                            "./output.json", 
+                                            "-t {} status - {} @ {} ".format(cc, date, time),
+                                            "-n",
+                                            "-s"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                        if vis.stderr:
+                            print("\t\tErrors occurred.")
+                            print(vis.stderr.decode("utf-8"))
+                        else:
+                            os.rename("./output.json", "./output.processed.json")
+                        os.chdir(root_path)
+                    elif os.path.isfile(os.path.join(time_path, "output.processed.json")):
+                        print("\t\tOutput already processed.")
                     else:
-                        os.rename("./output.json", "./output.processed.json")
-                    os.chdir(root_path)
-                elif os.path.isfile(os.path.join(time_path, "output.processed.json")):
-                    print("\t\tOutput already processed.")
-                else:
-                    print("\t\tNo output found.")
+                        print("\t\tNo output found.")
 
 if __name__ == "__main__":
     main()
