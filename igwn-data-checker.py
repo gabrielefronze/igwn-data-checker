@@ -59,7 +59,7 @@ def Handler(frcheck_executable, path, verbose, policy, runs_per_file):
     abs_path = os.path.abspath(path)
     
     if policy.endswith('%'):
-        fraction = int(policy.replace('%',''))/100
+        fraction = float(policy.replace('%',''))/100
 
     if os.path.isdir(abs_path):
         for path in os.listdir(abs_path):
