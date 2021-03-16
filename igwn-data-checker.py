@@ -54,7 +54,7 @@ def FrCheckWrapper(frcheck_executable, file_path, verbose):
     return {"checksum_status": checksum_status, "timer": {"real": time_real, "user": time_user, "sys": time_sys}, "status": True}
 
 
-def Handler(frcheck_executable, path, verbose, policy):
+def Handler(frcheck_executable, path, verbose, policy, runs_per_file):
     results = {}
     abs_path = os.path.abspath(path)
     
@@ -63,7 +63,7 @@ def Handler(frcheck_executable, path, verbose, policy):
 
     if os.path.isdir(abs_path):
         for path in os.listdir(abs_path):
-            r = Handler(frcheck_executable, os.path.join(abs_path, path), verbose, policy)
+            r = Handler(frcheck_executable, os.path.join(abs_path, path), verbose, policy, runs_per_file)
             for p, data in r.items():
                 if p in results:
                     results[p]["results"] += data["results"]
@@ -89,23 +89,24 @@ def Handler(frcheck_executable, path, verbose, policy):
                 process_file = True
             
             if process_file:
-                try:
-                    res = FrCheckWrapper(frcheck_executable, abs_path, verbose)
-                    if abs_path in results:
-                        results[abs_path]["results"] += [res]
-                    else:
-                        results[abs_path] = {}
-                        results[abs_path]["size"] = os.path.getsize(abs_path)
-                        results[abs_path]["results"] = [res]
-                except:
-                    print("Error processing path {}. Skipping.".format(abs_path))
-                    res = {"checksum_status": False, "timer": {"real": 0, "user": 0, "sys": 0}, "status": False}
-                    if abs_path in results:
-                        results[abs_path]["results"] += [res]
-                    else:
-                        results[abs_path] = {}
-                        results[abs_path]["size"] = os.path.getsize(abs_path)
-                        results[abs_path]["results"] = [res]
+                for i in range(0, runs_per_file):
+                    try:
+                        res = FrCheckWrapper(frcheck_executable, abs_path, verbose)
+                        if abs_path in results:
+                            results[abs_path]["results"] += [res]
+                        else:
+                            results[abs_path] = {}
+                            results[abs_path]["size"] = os.path.getsize(abs_path)
+                            results[abs_path]["results"] = [res]
+                    except:
+                        print("Error processing path {}. Skipping.".format(abs_path))
+                        res = {"checksum_status": False, "timer": {"real": 0, "user": 0, "sys": 0}, "status": False}
+                        if abs_path in results:
+                            results[abs_path]["results"] += [res]
+                        else:
+                            results[abs_path] = {}
+                            results[abs_path]["size"] = os.path.getsize(abs_path)
+                            results[abs_path]["results"] = [res]
         else:
             print("Path {} not valid. Not a .gwf file".format(abs_path))
     else:
@@ -123,13 +124,12 @@ def BulkHandler(frcheck_executable, settings):
         policy = "all"
 
     for path in paths:
-        for i in range(0, settings["settings"]["runs_per_file"]):
-            partial_results = Handler(frcheck_executable, os.path.abspath(path), settings["settings"]["verbose"], policy)
-            for p,measures in partial_results.items():
-                if p in results:
-                    results[p]["results"] += measures["results"]
-                else:
-                    results[p] = measures
+        partial_results = Handler(frcheck_executable, os.path.abspath(path), settings["settings"]["verbose"], policy, settings["settings"]["runs_per_file"])
+        for p,measures in partial_results.items():
+            if p in results:
+                results[p]["results"] += measures["results"]
+            else:
+                results[p] = measures
 
     return results
 
