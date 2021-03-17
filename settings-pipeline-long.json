@@ -1,0 +1,10 @@
+{
+    "settings": {
+        "runs_per_file": 3,
+        "verbose": false,
+        "policy": "5%"
+    },
+    "paths_to_test" : [
+        "/cvmfs/ligo.osgstorage.org/frames/O3/V1O3Repro1A/"
+    ]
+}
