@@ -38,6 +38,7 @@ def FrCheckWrapper(frcheck_executable, file_path, verbose):
     error_str = str(error.decode("utf-8"))
     if verbose:
         print(output_str)
+    if error_str:
         print(error_str)
     checksum_status = "No read error. File Checksum OK" in output_str and "No read error. Structure Checksums OK" in output_str
     
