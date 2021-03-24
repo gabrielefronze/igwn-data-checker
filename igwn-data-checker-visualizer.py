@@ -25,6 +25,7 @@ def main(json_path="output-PIC.json", normalize=False, title = None, save = None
     paths = {}
     counter = 0
     valid_counter = 0
+    invalid_counter = 0
     statuses = []
     checksum_results = []
     user_time_results = []
@@ -56,7 +57,6 @@ def main(json_path="output-PIC.json", normalize=False, title = None, save = None
             if r["status"]:
                 checksum_results.append(1 if r["checksum_status"] else 0)
                 real_time = r["timer"]["real"].split(":")
-
                 if i == 0:
                     first_user_time_results.append(r["timer"]["user"]/normalization)
                     first_sys_time_results.append(r["timer"]["sys"]/normalization)
@@ -66,11 +66,15 @@ def main(json_path="output-PIC.json", normalize=False, title = None, save = None
                     avg_user_time += r["timer"]["user"] if r["timer"]["user"]>0 else 0.01
                     avg_sys_time += r["timer"]["sys"] if r["timer"]["sys"]>0 else 0.01
                     avg_real_time += float(real_time[0])*60+float(real_time[1])
+            elif i == 0:
+                valid_counter -= 1
+                invalid_counter += 1
 
-        user_time_results.append((avg_user_time/counter)/normalization)
-        sys_time_results.append((avg_sys_time/counter)/normalization)
-        sys_MBps_results.append((size/2**20)/(avg_sys_time/counter))
-        real_time_results.append((avg_real_time/counter)/normalization)
+        if not counter == 0:
+            user_time_results.append((avg_user_time/counter)/normalization)
+            sys_time_results.append((avg_sys_time/counter)/normalization)
+            sys_MBps_results.append((size/2**20)/(avg_sys_time/counter))
+            real_time_results.append((avg_real_time/counter)/normalization)
 
     fig, axes = plt.subplots(nrows=5, ncols=2)
     fig.suptitle(title, fontsize=30)
@@ -95,10 +99,10 @@ def main(json_path="output-PIC.json", normalize=False, title = None, save = None
     ax[1].hist(statuses, 2, histtype='bar', weights=[1/n_statuses*100] * n_statuses, color='blue')
     ax[1].set_facecolor("whitesmoke")
     plt.sca(ax[1])
-    plt.xticks([.75, 1.25], ["failed", "valid"])
+    plt.xticks([0.25, 0.75], ["failed", "valid"])
     ax[1].set_title("Runtime failures distribution", position=(0.5, 0.6))
     ax[1].set_ylabel("percent [%]")
-    leg_n_entries = mpatches.Patch(color='blue', label="{} files tested\n {} times each".format(n_entries, n_tests))
+    leg_n_entries = mpatches.Patch(color='blue', label="{} files tested\n {} times each".format(n_entries+invalid_counter, n_tests))
     plt.legend(handles=[leg_n_entries])
 
     ax[2].hist(user_time_results, n_bins, histtype='bar', color='darkgreen')
