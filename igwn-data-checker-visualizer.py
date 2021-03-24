@@ -23,6 +23,7 @@ def main(json_path="output-PIC.json", normalize=False, title = None, save = None
         title = "Input file: "+os.path.basename(json_path)
 
     paths = {}
+    counter = 0
     valid_counter = 0
     statuses = []
     checksum_results = []
