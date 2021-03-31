@@ -33,14 +33,14 @@ def crawler(path, cache_content):
     results = {}
     if os.path.isdir(path):
         for node in os.listdir(os.path.abspath(path)):
-            results = results | crawler(node)
+            results = results | crawler(node, cache_content)
     else:
         pass
 
 
 
 def main():
-    cached_files = getLatestContentFile()
+    cached_files = getCachedContentList()
     print(cached_files)
     return
 
