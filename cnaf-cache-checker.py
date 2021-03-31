@@ -40,7 +40,6 @@ def crawler(cvmfs_path, cache_content):
     else:
         if ".gwf" in os.path.basename(cvmfs_path):
             relative_path = cvmfs_path
-            print(relative_path)
             if relative_path in cache_content:
                 results[relative_path] = {'cached': True}
             else:
@@ -52,7 +51,7 @@ def crawler(cvmfs_path, cache_content):
 
 def main():
     cached_files = getCachedContentList()
-    results = crawler(CVMFS_BASE_PATH+"/O3/V1Online/V-V1Online-12389", cached_files)
+    results = crawler(CVMFS_BASE_PATH, cached_files)
     total = len(results)
     cached = sum(1 if r['cached'] else 0 for r in results.values())
     print("{} files checked. {} files in cache ({}%)".format(total, cached, cached/total*100))
