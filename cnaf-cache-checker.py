@@ -37,7 +37,7 @@ def crawler(cvmfs_path, cache_content):
         print("Handling {}".format(cvmfs_path))
         for node in os.listdir(cvmfs_path):
             print(node)
-            results = {**results, **crawler(node, cache_content)}
+            results = {**results, **crawler(cvmfs_path+'/'+node, cache_content)}
     else:
         if ".gwf" in os.path.basename(cvmfs_path):
             relative_path = cvmfs_path.replace(CVMFS_BASE_PATH, '')
