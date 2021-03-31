@@ -35,6 +35,7 @@ def crawler(path, cache_content):
         for node in os.listdir(os.path.abspath(path)):
             results = results | crawler(node)
     else:
+        pass
 
 
 
