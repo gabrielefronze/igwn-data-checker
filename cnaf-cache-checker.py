@@ -42,7 +42,7 @@ def crawler(cvmfs_path, cache_content):
         
         total = len(results)
         cached = sum(1 if r['cached'] else 0 for r in results.values())
-        print("{}: {}/{} ({}%)".format(cvmfs_path, cached, total, cached/total*100))
+        print("{}: {}/{} ({}%)".format(cvmfs_path, cached, total, round(cached/total*100, 2)))
     else:
         if ".gwf" in os.path.basename(cvmfs_path):
             relative_path = cvmfs_path
