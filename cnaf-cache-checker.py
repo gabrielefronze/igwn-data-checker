@@ -51,7 +51,7 @@ def crawler(cvmfs_path, cache_content):
 
 def main():
     cached_files = getCachedContentList()
-    results = crawler(CVMFS_BASE_PATH, cached_files)
+    results = crawler(CVMFS_BASE_PATH+"/O3", cached_files)
     total = len(results)
     cached = sum(1 if r['cached'] else 0 for r in results.values())
     print("{} files checked. {} files in cache ({}%)".format(total, cached, cached/total*100))
