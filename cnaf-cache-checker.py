@@ -11,6 +11,7 @@ def getCachedContentList():
     ls = "gfal-ls -l {} | tail -n 1".format(CACHE_CONTENT_FILE_BASE_PATH)
     process = subprocess.Popen(ls.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     output, error = process.communicate()
+    print(output)
     filename = CACHE_CONTENT_FILE_BASE_PATH+output.split()[-1]
     print(filename)
 
