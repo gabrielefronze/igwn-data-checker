@@ -4,7 +4,7 @@ import os
 import subprocess
 
 CACHE_CONTENT_FILE_BASE_PATH="srm://storm-fe-archive.cr.cnaf.infn.it:8444/virgoplain/"
-CVMFS_BASE_PATH="/cvmfs/ligo.osgstorage.org/"
+CVMFS_BASE_PATH="/cvmfs/ligo.osgstorage.org/frames/O3"
 STASHCACHE_BASE_PATH="/storage/gpfs_xcache/virgo/user/ligo/"
 
 def getCachedContentList():
