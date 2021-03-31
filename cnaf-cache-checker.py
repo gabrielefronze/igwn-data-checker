@@ -4,8 +4,8 @@ import os
 import subprocess
 
 CACHE_CONTENT_FILE_BASE_PATH="srm://storm-fe-archive.cr.cnaf.infn.it:8444/virgoplain/"
-CVMFS_BASE_PATH="/cvmfs/ligo.osgstorage.org/frames/O3/V1Online/V-V1Online-12389"
-STASHCACHE_BASE_PATH="/storage/gpfs_xcache/virgo/user/ligo/"
+CVMFS_BASE_PATH="/cvmfs/ligo.osgstorage.org/frames"
+STASHCACHE_BASE_PATH="/storage/gpfs_xcache/virgo/user/ligo/frames"
 
 def getCachedContentList():
     ls = "gfal-ls -l {}".format(CACHE_CONTENT_FILE_BASE_PATH)
@@ -24,7 +24,7 @@ def getCachedContentList():
     for line in (output.decode('utf-8')).splitlines():
         cached_filename = line.split()[-1]
         if ".gwf" in cached_filename and not ".cinfo" in cached_filename:
-            cached_files.append(cached_filename.replace(STASHCACHE_BASE_PATH,''))
+            cached_files.append(cached_filename.replace(STASHCACHE_BASE_PATH,CVMFS_BASE_PATH))
 
     print("{} files found".format(len(cached_files)))
 
@@ -39,7 +39,7 @@ def crawler(cvmfs_path, cache_content):
             results = {**results, **crawler(cvmfs_path+'/'+node, cache_content)}
     else:
         if ".gwf" in os.path.basename(cvmfs_path):
-            relative_path = cvmfs_path.replace(CVMFS_BASE_PATH, '').strip('/').rstrip('/')
+            relative_path = cvmfs_path
             print(relative_path)
             if relative_path in cache_content:
                 results[relative_path] = {'cached': True}
@@ -52,7 +52,7 @@ def crawler(cvmfs_path, cache_content):
 
 def main():
     cached_files = getCachedContentList()
-    results = crawler(CVMFS_BASE_PATH, cached_files)
+    results = crawler(CVMFS_BASE_PATH+"/O3/V1Online/V-V1Online-12389", cached_files)
     total = len(results)
     cached = sum(1 if r['cached'] else 0 for r in results.values())
     print("{} files checked. {} files in cache ({}%)".format(total, cached, cached/total*100))
