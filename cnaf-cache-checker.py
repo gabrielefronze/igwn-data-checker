@@ -31,19 +31,27 @@ def getCachedContentList():
     return cached_files
 
 
-def crawler(path, cache_content):
+def crawler(cvmfs_path, cache_content):
     results = {}
-    if os.path.isdir(path):
-        for node in os.listdir(os.path.abspath(path)):
+    if os.path.isdir(cvmfs_path):
+        for node in os.listdir(os.path.abspath(cvmfs_path)):
             results = results | crawler(node, cache_content)
     else:
-        pass
+        if ".gwf" in os.path.basename(cvmfs_path):
+            relative_path = cvmfs_path.replace(CVMFS_BASE_PATH, '')
+            if relative_path in cache_content:
+                results[relative_path] = {'cached': True}
+            else:
+                results[relative_path] = {'cached': False}
+
+    return results
 
 
 
 def main():
     cached_files = getCachedContentList()
-    print(cached_files)
+    results = crawler(CVMFS_BASE_PATH)
+    print(results)
     return
 
 if __name__ == "__main__":
