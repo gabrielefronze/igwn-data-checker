@@ -71,6 +71,6 @@ def main(subfolder = "/O3"):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='CNAF-specific cache checker')
-    parser.add_argument("--subfolder", '-s', type=str, help="{} subfolder to crwal in".format(CVMFS_BASE_PATH), default="/O3")
+    parser.add_argument("--subfolder", '-s', type=str, help="{} subfolder to crawl in".format(CVMFS_BASE_PATH), default="/O3")
     args = parser.parse_args()
     main(subfolder=args.subfolder)
