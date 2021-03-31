@@ -44,5 +44,5 @@ def main():
     print(cached_files)
     return
 
-if __name__ == "__file__":
+if __name__ == "__main__":
     main()
