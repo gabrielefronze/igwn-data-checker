@@ -18,14 +18,15 @@ def getCachedContentList():
     cat = "gfal-cat {}".format(filename)
     process = subprocess.Popen(cat.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     output, error = process.communicate()
-    print(output)
 
     cached_files = []
 
-    for line in output.splitlines():
+    for line in output.decode('utf-8').splitlines():
         cached_filename = line.split[-1]
         if ".gwf" in cached_filename and not ".cinfo" in cached_filename:
             cached_files.append(cached_filename.replace(STASHCACHE_BASE_PATH,''))
+
+    print("{} files found".format(len(cached_files)))
 
     return cached_files
 
