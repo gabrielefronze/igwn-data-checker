@@ -8,7 +8,7 @@ CVMFS_BASE_PATH="/cvmfs/ligo.osgstorage.org/"
 STASHCACHE_BASE_PATH="/storage/gpfs_xcache/virgo/user/ligo/"
 
 def getCachedContentList():
-    ls = "gfal-ls -l {} | tail -n 1".format(CACHE_CONTENT_FILE_BASE_PATH)
+    ls = "gfal-ls -l {}|tail -n 1".format(CACHE_CONTENT_FILE_BASE_PATH)
     print(ls)
     process = subprocess.Popen(ls.split(), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     output, error = process.communicate()
