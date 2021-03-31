@@ -52,7 +52,10 @@ def crawler(cvmfs_path, cache_content):
 def main():
     cached_files = getCachedContentList()
     results = crawler(CVMFS_BASE_PATH, cached_files)
-    print(results)
+    total = len(results)
+    cached = sum(1 if r['cached'] else 0 for r in results.values())
+    print("{} files checked. {} files in cache ({}%)".format(total, cached, cached/total*100))
+    
     return
 
 if __name__ == "__main__":
