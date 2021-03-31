@@ -50,7 +50,7 @@ def crawler(cvmfs_path, cache_content):
 
 def main():
     cached_files = getCachedContentList()
-    results = crawler(CVMFS_BASE_PATH)
+    results = crawler(CVMFS_BASE_PATH, cached_files)
     print(results)
     return
 
