@@ -35,7 +35,7 @@ def crawler(cvmfs_path, cache_content):
     results = {}
     if not os.path.isfile(cvmfs_path):
         print("Handling {}".format(cvmfs_path))
-        for node in os.listdir(os.path.abspath(cvmfs_path)):
+        for node in os.listdir(cvmfs_path):
             print(node)
             results = {**results, **crawler(node, cache_content)}
     else:
