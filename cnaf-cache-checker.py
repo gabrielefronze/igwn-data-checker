@@ -21,8 +21,8 @@ def getCachedContentList():
 
     cached_files = []
 
-    for line in output.decode('utf-8').splitlines():
-        cached_filename = line.split[-1]
+    for line in (output.decode('utf-8')).splitlines():
+        cached_filename = line.split()[-1]
         if ".gwf" in cached_filename and not ".cinfo" in cached_filename:
             cached_files.append(cached_filename.replace(STASHCACHE_BASE_PATH,''))
 
