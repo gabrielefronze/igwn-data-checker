@@ -64,6 +64,7 @@ def main(subfolder = "/O3"):
     results = crawler(CVMFS_BASE_PATH+subfolder, cached_files)
     total = len(results)
     cached = sum(1 if r['cached'] else 0 for r in results.values())
+    print("============================================================================================================")
     print("TOTAL: {} files checked. {} files in cache ({}%)".format(total, cached, cached/total*100))
     
     return
