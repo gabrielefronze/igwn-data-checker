@@ -39,7 +39,7 @@ def crawler(cvmfs_path, cache_content):
             results = {**results, **crawler(cvmfs_path+'/'+node, cache_content)}
     else:
         if ".gwf" in os.path.basename(cvmfs_path):
-            relative_path = cvmfs_path.replace(CVMFS_BASE_PATH, '')
+            relative_path = cvmfs_path.replace(CVMFS_BASE_PATH, '').strip('/').rstrip('/')
             print(relative_path)
             if relative_path in cache_content:
                 results[relative_path] = {'cached': True}
