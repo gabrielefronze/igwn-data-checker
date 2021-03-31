@@ -7,6 +7,7 @@ import argparse
 CACHE_CONTENT_FILE_BASE_PATH="srm://storm-fe-archive.cr.cnaf.infn.it:8444/virgoplain/"
 CVMFS_BASE_PATH="/cvmfs/ligo.osgstorage.org/frames"
 STASHCACHE_BASE_PATH="/storage/gpfs_xcache/virgo/user/ligo/frames"
+FILE_EXTENSION=".gwf"
 
 def getCachedContentList():
     ls = "gfal-ls -l {}".format(CACHE_CONTENT_FILE_BASE_PATH)
@@ -24,7 +25,7 @@ def getCachedContentList():
 
     for line in (output.decode('utf-8')).splitlines():
         cached_filename = line.split()[-1]
-        if ".gwf" in cached_filename and not ".cinfo" in cached_filename:
+        if FILE_EXTENSION in cached_filename and not ".cinfo" in cached_filename:
             cached_files.append(cached_filename.replace(STASHCACHE_BASE_PATH,CVMFS_BASE_PATH))
 
     print("{} files found".format(len(cached_files)))
@@ -45,9 +46,9 @@ def crawler(cvmfs_path, cache_content):
         if not total == 0:
             print("{}: {}/{} ({}%)".format(cvmfs_path, cached, total, round(cached/total*100, 2)))
         else:
-            print("{}: zero .gwf files in CVMFS".format(cvmfs_path)) 
+            print("{}: zero {} files in CVMFS".format(cvmfs_path, FILE_EXTENSION)) 
     else:
-        if ".gwf" in os.path.basename(cvmfs_path):
+        if FILE_EXTENSION in os.path.basename(cvmfs_path):
             relative_path = cvmfs_path
             if relative_path in cache_content:
                 results[relative_path] = {'cached': True}
