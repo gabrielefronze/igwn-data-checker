@@ -2,6 +2,7 @@
 
 import os
 import subprocess
+import argparse
 
 CACHE_CONTENT_FILE_BASE_PATH="srm://storm-fe-archive.cr.cnaf.infn.it:8444/virgoplain/"
 CVMFS_BASE_PATH="/cvmfs/ligo.osgstorage.org/frames"
@@ -49,9 +50,9 @@ def crawler(cvmfs_path, cache_content):
 
 
 
-def main():
+def main(subfolder = "/O3"):
     cached_files = getCachedContentList()
-    results = crawler(CVMFS_BASE_PATH+"/O3", cached_files)
+    results = crawler(CVMFS_BASE_PATH+subfolder, cached_files)
     total = len(results)
     cached = sum(1 if r['cached'] else 0 for r in results.values())
     print("{} files checked. {} files in cache ({}%)".format(total, cached, cached/total*100))
@@ -59,4 +60,7 @@ def main():
     return
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description='CNAF-specific cache checker')
+    parser.add_argument("--subfolder", '-s', type=str, help="{} subfolder to crwal in".format(CVMFS_BASE_PATH), default="/O3")
+    args = parser.parse_args()
+    main(subfolder=args.subfolder)
