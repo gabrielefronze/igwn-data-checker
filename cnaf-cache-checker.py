@@ -34,6 +34,7 @@ def getCachedContentList():
 def crawler(cvmfs_path, cache_content):
     results = {}
     if os.path.isdir(cvmfs_path):
+        print("Handling {}".format(cvmfs_path))
         for node in os.listdir(os.path.abspath(cvmfs_path)):
             results = {**results, **crawler(node, cache_content)}
     else:
