@@ -34,10 +34,15 @@ def getCachedContentList():
 
 def crawler(cvmfs_path, cache_content):
     results = {}
+    n_total = 0
+    n_cached = 0
     if not os.path.isfile(cvmfs_path):
-        print("Handling {}".format(cvmfs_path))
         for node in os.listdir(cvmfs_path):
             results = {**results, **crawler(cvmfs_path+'/'+node, cache_content)}
+        
+        total = len(results)
+        cached = sum(1 if r['cached'] else 0 for r in results.values())
+        print("{}: {}/{} ({}%)".format(cvmfs_path, total, cached, cached/total*100))
     else:
         if ".gwf" in os.path.basename(cvmfs_path):
             relative_path = cvmfs_path
