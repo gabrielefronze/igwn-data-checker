@@ -35,7 +35,10 @@ def replace_text_in_file(path, replacements):
 
 def condor_submit(submit_file):
     condor_submit_command = subprocess.run(["condor_submit", submit_file], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    print("Condor output: {}".format(condor_submit_command.stdout))
+    print("Condor output: \n{}".format(condor_submit_command.stdout.decode("utf-8")))
+    if condor_submit_command.stderr:
+        print("Condor err: \n{}".format(condor_submit_command.stderr.decode("utf-8")))
+        raise Exception("Error while submitting! Aborting")
 
 def main(frcheck_path = None, settings_file_path = None):
     root_dir = os.path.abspath(os.path.dirname(__file__))
